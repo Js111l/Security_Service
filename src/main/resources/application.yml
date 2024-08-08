@@ -1,0 +1,18 @@
+spring:
+  server:
+    8080
+  application:
+    name: security-service
+  jpa:
+    hibernate:
+      ddl-auto:
+    properties:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user_db
+    username: admin
+    password: password
+    driver-class-name: org.postgresql.Driver
+jwt:
+  secret: ${SECRET_KEY}
+

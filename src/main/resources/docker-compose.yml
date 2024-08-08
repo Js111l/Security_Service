@@ -1,0 +1,10 @@
+services:
+  user-db:
+    image: postgres:latest
+    container_name: user_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: user_db
+    ports:
+      - 5432:5432
