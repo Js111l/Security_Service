@@ -21,11 +21,11 @@ public class TokenUtil {
     @Value("jwt.salt")
     private String salt;
 
-    private static final Integer ITERATION_COUNT=10_000;
-    private static final Integer KEY_SIZE=256;
+    private static final Integer ITERATION_COUNT = 10_000;
+    private static final Integer KEY_SIZE = 256;
 
-    public String createToken(Map<String,String> claims, String email, String userId) throws NoSuchAlgorithmException, InvalidKeySpecException {
-      return Jwts.builder()
+    public String createToken(Map<String, String> claims, String email, String userId) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        return Jwts.builder()
                 .claims(claims)
                 .subject(email)
                 .issuedAt(Date.from(Instant.now()))
@@ -46,11 +46,18 @@ public class TokenUtil {
     }
 
     public void verifyToken(String token) throws NoSuchAlgorithmException, InvalidKeySpecException {
-            Jwts.parser()
-                    .verifyWith((SecretKey) getKey())
-                    .build()
-                    .parseSignedClaims(token);
+        Jwts.parser()
+                .verifyWith((SecretKey) getKey())
+                .build()
+                .parseSignedClaims(token);
     }
 
 
+    public String getUserNameFromToken(String token) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        return Jwts.parser().verifyWith((SecretKey) getKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+    }
 }

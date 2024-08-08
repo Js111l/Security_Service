@@ -10,20 +10,20 @@ import java.util.List;
 
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
-    private final User internalUser;
+    private final User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(); //TODO
     }
 
     @Override
     public String getPassword() {
-        return internalUser.getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return internalUser.getEmail();
+        return user.getEmail();
     }
 }
