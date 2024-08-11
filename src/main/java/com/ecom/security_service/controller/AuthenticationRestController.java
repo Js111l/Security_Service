@@ -18,6 +18,7 @@ import java.util.HashMap;
 
 @RestController //TODO rest exceptions handler
 @Slf4j
+@RequestMapping("/auth")
 public class AuthenticationRestController {
     @Autowired
     private AuthenticationManager manager;

@@ -39,7 +39,7 @@ public class SecurityConfig {
     public SecurityFilterChain httpSecurity(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login", "/register", "/register/activation-token").permitAll()
+                        .requestMatchers("/auth/login", "/auth/register", "/auth/register/activation-token").permitAll()
                         .anyRequest().authenticated()
                 ).addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(x -> x.authenticationEntryPoint(entryPoint()));
