@@ -1,11 +1,22 @@
 spring:
   server:
     8080
+  mail:
+    host: ${HOST}
+    port: ${PORT}
+    username: ${USERNAME}
+    password: ${PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   application:
     name: security-service
   jpa:
     hibernate:
-      ddl-auto:
+      ddl-auto: validate
     properties:
       dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
@@ -13,6 +24,15 @@ spring:
     username: admin
     password: password
     driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+    user: admin
+    password: password
+    schemas: public
+    locations: classpath:db
+    clean-disabled: true
+    baseline-on-migrate: true
+    baseline-version: '0.0'
 jwt:
   secret: ${SECRET_KEY}
   salt: ${SALT}

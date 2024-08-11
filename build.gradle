@@ -38,6 +38,9 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
     implementation 'org.postgresql:postgresql:42.7.3'
     implementation 'org.bouncycastle:bcprov-jdk18on:1.78.1'
+    implementation 'org.springframework.boot:spring-boot-starter-mail:3.3.2'
+    implementation 'org.flywaydb:flyway-core:10.17.0'
+    runtimeOnly 'org.flywaydb:flyway-database-postgresql:10.17.0'
 }
 
 tasks.named('test') {

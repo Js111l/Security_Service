@@ -16,9 +16,9 @@ import java.util.Date;
 import java.util.Map;
 
 public class TokenUtil {
-    @Value("jwt.secret")
+    @Value("${jwt.secret}")
     private String secret;
-    @Value("jwt.salt")
+    @Value("${jwt.salt}")
     private String salt;
 
     private static final Integer ITERATION_COUNT = 10_000;
