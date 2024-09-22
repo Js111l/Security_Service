@@ -5,7 +5,7 @@ CREATE SEQUENCE IF NOT EXISTS user_sequence
     NO MAXVALUE
     CACHE 1;
 
-CREATE TABLE IF NOT EXISTS SHOP_USER (
+CREATE TABLE IF NOT EXISTS APP_USER (
     id bigint PRIMARY KEY DEFAULT nextval('user_sequence'::regclass),
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS public.VERIFICATION_TOKEN (
     uuid VARCHAR(255),
     expiration_date timestamp without time zone,
     user_id BIGINT,
-    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES SHOP_USER(id)
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES APP_USER(id)
 );
 
 

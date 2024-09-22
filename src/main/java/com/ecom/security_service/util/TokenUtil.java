@@ -16,11 +16,13 @@ import java.util.Date;
 import java.util.Map;
 
 public class TokenUtil {
-    @Value("${jwt.secret}")
-    private String secret;
-    @Value("${jwt.salt}")
-    private String salt;
+//    @Value("${jwt.secret}")
+//    private String secret;
+//    @Value("${jwt.salt}")
+//    private String salt;
 
+    String secret="hsef";
+    String salt="fsj98";
     private static final Integer ITERATION_COUNT = 10_000;
     private static final Integer KEY_SIZE = 256;
 

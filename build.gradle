@@ -41,6 +41,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail:3.3.2'
     implementation 'org.flywaydb:flyway-core:10.17.0'
     runtimeOnly 'org.flywaydb:flyway-database-postgresql:10.17.0'
+    implementation 'org.mapstruct:mapstruct:1.6.2'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.2'
 }
 
 tasks.named('test') {

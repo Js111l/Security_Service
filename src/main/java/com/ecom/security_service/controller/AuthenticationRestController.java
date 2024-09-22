@@ -1,5 +1,6 @@
 package com.ecom.security_service.controller;
 
+import com.ecom.security_service.dao.entity.User;
 import com.ecom.security_service.service.EmailService;
 import com.ecom.security_service.service.UserService;
 import com.ecom.security_service.service.RegistrationService;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
@@ -26,8 +29,8 @@ public class AuthenticationRestController {
     private UserService userService;
     @Autowired
     private RegistrationService registrationService;
-    @Autowired
-    private EmailService emailService;
+   // @Autowired
+   // private EmailService emailService;
 
     private final TokenUtil tokenUtil = new TokenUtil();
 
@@ -51,7 +54,11 @@ public class AuthenticationRestController {
             throw new RuntimeException("Email already used!"); //TODO zmienic exceptions na lepsze
         });
         final var token = this.registrationService.createRegistrationTokenForUser(loginRequestModel);
-        this.emailService.sendRegistrationConfirmationMail(token);
+        //this.emailService.sendRegistrationConfirmationMail(token);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
+                loginRequestModel.email(),
+                loginRequestModel.password()
+        ));
     }
 
     @GetMapping("/register/activation-token")
@@ -60,6 +67,10 @@ public class AuthenticationRestController {
     }
 
 
+    @GetMapping("/context/current-user")
+    public UserModel getCurrentUserId() {
+        return this.userService.getCurrentUser();
+    }
 }
 
 

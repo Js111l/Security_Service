@@ -1,10 +1,12 @@
 package com.ecom.security_service.dao.entity;
 
+import com.ecom.security_service.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 
 
-@Table(name = "SHOP_USER")
+@Table(name = "APP_USER")
+@Entity
 @Data
 public class User {
     @Id
@@ -17,4 +19,8 @@ public class User {
     private String password;
     @Column(name = "email_confirmed")
     private Boolean emailConfirmed;
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
+
 }

@@ -1,17 +1,18 @@
+
+server:
+  port: 8080
 spring:
-  server:
-    8080
-  mail:
-    host: ${HOST}
-    port: ${PORT}
-    username: ${USERNAME}
-    password: ${PASSWORD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
+#  mail:
+#    host: ${HOST}
+#    port: ${PORT}
+#    username: ${USERNAME}
+#    password: ${PASSWORD}
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
   application:
     name: security-service
   jpa:
@@ -34,6 +35,6 @@ spring:
     baseline-on-migrate: true
     baseline-version: '0.0'
 jwt:
-  secret: ${SECRET_KEY}
-  salt: ${SALT}
+  secret: ceve #${SECRET_KEY}
+  salt: eeee #${SALT}
 

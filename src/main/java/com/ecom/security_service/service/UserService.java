@@ -1,10 +1,14 @@
 package com.ecom.security_service.service;
 
 import com.ecom.security_service.controller.LoginRequestModel;
+import com.ecom.security_service.controller.UserModel;
 import com.ecom.security_service.dao.UserRepository;
 import com.ecom.security_service.dao.entity.User;
+import com.ecom.security_service.dao.mapper.UserMapper;
+import com.ecom.security_service.enums.UserRole;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -39,10 +43,18 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(loginRequestModel.password()));
         user.setEmail(loginRequestModel.email());
         user.setEmailConfirmed(false);
+        user.setUserRole(UserRole.CUSTOMER);//todo
         return user;
     }
 
     public Optional<User> fetchById(Long id) {
         return this.userRepository.findById(id);
+    }
+
+    public UserModel getCurrentUser() {
+        final var auth = SecurityContextHolder.getContext().getAuthentication();
+        return UserMapper.INSTANCE.entityToModel(
+                this.userRepository.findByEmail(auth.getName()).orElseThrow()
+        );
     }
 }

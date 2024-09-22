@@ -40,7 +40,7 @@ public class EmailConfig {
 
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(applicationSettings.get(MAIL_HOST));
-        mailSender.setPort(Integer.parseInt(applicationSettings.get(MAIL_PORT)));
+        mailSender.setPort(applicationSettings.get(MAIL_PORT).isEmpty() ? 587 : Integer.parseInt(applicationSettings.get(MAIL_PORT)));
 
         mailSender.setUsername(applicationSettings.get(MAIL_USERNAME));
         mailSender.setPassword(applicationSettings.get(MAIL_PASSWORD));
