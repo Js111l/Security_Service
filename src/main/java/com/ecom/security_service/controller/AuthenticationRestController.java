@@ -68,9 +68,16 @@ public class AuthenticationRestController {
 
 
     @GetMapping("/context/current-user")
+    @CrossOrigin
     public UserModel getCurrentUserId() {
         return this.userService.getCurrentUser();
     }
+
+    @GetMapping("/token")
+    public String refreshToken() throws NoSuchAlgorithmException, InvalidKeySpecException {
+        return this.userService.refreshToken();
+    }
+
 }
 
 

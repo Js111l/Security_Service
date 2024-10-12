@@ -6,6 +6,7 @@ import com.ecom.security_service.dao.UserRepository;
 import com.ecom.security_service.dao.entity.User;
 import com.ecom.security_service.dao.mapper.UserMapper;
 import com.ecom.security_service.enums.UserRole;
+import com.ecom.security_service.util.TokenUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +16,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.HashMap;
 import java.util.Optional;
 
 @Service
@@ -55,6 +59,17 @@ public class UserService implements UserDetailsService {
         final var auth = SecurityContextHolder.getContext().getAuthentication();
         return UserMapper.INSTANCE.entityToModel(
                 this.userRepository.findByEmail(auth.getName()).orElseThrow()
+        );
+    }
+
+    public String refreshToken() throws NoSuchAlgorithmException, InvalidKeySpecException {
+        var currentUser = this.getCurrentUser();
+        var map = new HashMap<String, String>();
+        map.put("role", currentUser.role().name());
+        return new TokenUtil().createToken(
+                map,
+                currentUser.email(),
+                currentUser.id().toString()
         );
     }
 }
