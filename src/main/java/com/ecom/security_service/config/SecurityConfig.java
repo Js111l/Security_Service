@@ -3,7 +3,6 @@ package com.ecom.security_service.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -11,15 +10,9 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
-    @Bean
-    public JWTFilter jwtFilter() {
-        return new JWTFilter();
-    }
-
     @Bean
     public AuthenticationEntryPoint entryPoint() {
         return new SecurityEntryPoint();
@@ -36,18 +29,25 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain httpSecurity(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/login", "/auth/register", "/auth/register/activation-token","/auth/token")
+    public SecurityFilterChain securityWebFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(
+                                "/auth/login",
+                                "/auth/session/jwt",
+                                "/auth/register",
+                                "/auth/register/activation-token",
+                                "/auth/token",
+                                "/auth/payment-token",
+                                "/auth/one-time-token",
+                                "/auth/pay-token",
+                                "/auth/session/verify")
                         .permitAll()
-                        .anyRequest().authenticated()
-                ).addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
-                .httpBasic(x -> x.authenticationEntryPoint(entryPoint()));
-
-
+                        .anyRequest().permitAll()
+                ).csrf(AbstractHttpConfigurer::disable)
+                .anonymous(AbstractHttpConfigurer::disable)
+                .httpBasic(x -> x.authenticationEntryPoint(entryPoint()))
+        ;
         return http.build();
     }
-
 
 }

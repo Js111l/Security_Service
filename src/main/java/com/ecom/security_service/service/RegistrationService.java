@@ -24,6 +24,7 @@ import java.util.UUID;
 @Transactional
 @AllArgsConstructor
 public class RegistrationService {
+    //LINK DO KONFIRMACJI EMAILA - RACZEJ PROSTY JWT, PO CO TE CALLE DO BAZY I RECZNE USTAWIANIE EXPIRATION?
     private final VerificationTokenRepository verificationTokenRepository;
     @Autowired
     private UserService userService;

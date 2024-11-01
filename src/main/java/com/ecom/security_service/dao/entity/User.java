@@ -4,11 +4,13 @@ import com.ecom.security_service.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
+
 
 @Table(name = "APP_USER")
 @Entity
 @Data
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
