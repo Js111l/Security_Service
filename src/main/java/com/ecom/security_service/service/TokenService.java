@@ -15,6 +15,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.HashMap;
 
 @Service
 @Transactional
@@ -28,6 +29,9 @@ public class TokenService {
 
     private String secret = "hsef";
     private String algo = "HmacSHA512";
+
+    private final TokenUtil tokenUtil;
+    private final RedisSessionService redisSessionService;
 
     public static String encode(String algorithm, String data, String key) throws NoSuchAlgorithmException, InvalidKeyException {
         SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(), algorithm);
@@ -47,48 +51,35 @@ public class TokenService {
         return hexString.toString();
     }
 
-//    public String generateOneTimeToken(String intentId, String secret2) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException {
-//        final var token = new TokenUtil().createOneTimeToken(intentId, secret);
-//
-//        var entity = new OneTimeToken();
-//        entity.setToken(token);
-//        entity.setUuid(encode(algo, intentId, secret)); //zahaszhowany intentId
-//        entity.setUsed(false); //mark token as not used
-//
-//        return oneTimeTokenRepository.save(entity).getUuid();
-//    }
-//
-//    public void verifyOneTimeToken(String uuid, String intentId) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException {
-//        final var oneTimeToken = this.oneTimeTokenRepository.getByUuid(encode(algo, uuid, secret));
-//        if (!oneTimeToken.isPresent()) {
-//            throw new RuntimeException(uuid + "    " + 2137);
-//        }
-////        if (oneTimeToken.getUsed()) {
-////            throw new RuntimeException("Already used!");
-////        }
-////        oneTimeToken.setUsed(true);
-//        try {
-//            new TokenUtil().verifyOneTimeToken(oneTimeToken.get().getToken(), secret);
-//        } catch (Exception ex) {
-//            throw new RuntimeException(intentId);
-//        }
-//    }
+    public String getPaymentToken(String uuid, HttpSession session) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
-    public String getPaymentToken(String intentId, HttpSession session) throws NoSuchAlgorithmException, InvalidKeyException, InvalidKeySpecException, JsonProcessingException {
         var sessionId = session.getId();
-//        String attribute = session.getAttribute(sessionId);
-
-//        UserSessionModel user = null;
-//        if (attribute != null) {
-//            user = (UserSessionModel) attribute;
-//        }
-
-        var encodedIntentId = encode(algo, intentId, secret);
-        var value = encode(algo, encodedIntentId, sessionId);
-//        if (user != null) {
-//            value = encode(algo, value, user.getId());
-//        }
-        return new TokenUtil().createPaymentToken(value);
+        boolean isValid = (boolean) this.redisSessionService.getAttributeFromSession(
+                "spring:session:sessions:" + sessionId,
+                "sessionAttr:sessionValid"
+        );
+        if (!isValid) {
+            throw new RuntimeException("FORBIDDEN BO SESJA NIEWAZNA");
+        }
+        var roles = this.redisSessionService.getAttributeFromSession(
+                "spring:session:sessions:" + sessionId,
+                "sessionAttr:roles"
+        );
+        var email = this.redisSessionService.getAttributeFromSession(
+                "spring:session:sessions:" + sessionId,
+                "sessionAttr:userEmail"
+        );
+        var loggedIn = this.redisSessionService.getAttributeFromSession(
+                "spring:session:sessions:" + sessionId,
+                "sessionAttr:loggedIn"
+        );
+        var claims = new HashMap<String, Object>();
+        claims.put("sessionId", sessionId);
+        claims.put("userEmail", email);
+        claims.put("loggedIn", loggedIn);
+        claims.put("authorities", roles);
+        claims.put("uuid", uuid);
+        return tokenUtil.createPaymentToken(claims);
     }
 
 }

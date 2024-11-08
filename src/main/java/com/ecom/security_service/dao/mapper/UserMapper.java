@@ -1,5 +1,6 @@
 package com.ecom.security_service.dao.mapper;
 
+import com.ecom.security_service.model.UserDataModel;
 import com.ecom.security_service.controller.UserModel;
 import com.ecom.security_service.dao.entity.User;
 import org.mapstruct.Mapper;
@@ -12,4 +13,6 @@ public interface UserMapper {
     User modelToEntity(UserModel userModel);
 
     UserModel entityToModel(User user);
+
+    UserDataModel entityToDataModel(User user);
 }

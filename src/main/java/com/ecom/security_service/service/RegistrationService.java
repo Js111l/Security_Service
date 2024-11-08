@@ -28,6 +28,8 @@ public class RegistrationService {
     private final VerificationTokenRepository verificationTokenRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private TokenUtil tokenUtil;
 
     private VerificationToken createToken(User newUser) {
         var newToken = new VerificationToken();
@@ -71,7 +73,7 @@ public class RegistrationService {
         final var verificationToken = this.getTokenByUUID(token);
         final var user = verificationToken.getUser();
         this.authenticateUser(user);
-        return new TokenUtil().createToken(
+        return tokenUtil.createToken(
                 new HashMap<>(),
                 user.getEmail(),
                 String.valueOf(user.getId())

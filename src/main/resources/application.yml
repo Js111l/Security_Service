@@ -1,6 +1,9 @@
 server:
   port: 8080
 spring:
+  session:
+    store-type:
+      redis
   web:
     cors:
       allowed-origins: "http://localhost:3000"

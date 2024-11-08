@@ -6,10 +6,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.savedrequest.NullRequestCache;
 
 @Configuration
 public class SecurityConfig {
@@ -40,10 +42,15 @@ public class SecurityConfig {
                                 "/auth/payment-token",
                                 "/auth/one-time-token",
                                 "/auth/pay-token",
-                                "/auth/session/verify")
+                                "/auth/session/verify",
+                                "/auth/session/user")
                         .permitAll()
                         .anyRequest().permitAll()
                 ).csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(httpSecuritySessionManagementConfigurer ->
+                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.NEVER)
+                )
+                .requestCache(x->x.requestCache(new NullRequestCache()))
                 .anonymous(AbstractHttpConfigurer::disable)
                 .httpBasic(x -> x.authenticationEntryPoint(entryPoint()))
         ;

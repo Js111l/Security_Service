@@ -1,17 +1,17 @@
 package com.ecom.security_service.model;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserSessionModel implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -19,4 +19,5 @@ public class UserSessionModel implements Serializable {
     private String email;
     private Boolean loggedIn;
     private Boolean sessionValid;
+    private List<String> roles;
 }
