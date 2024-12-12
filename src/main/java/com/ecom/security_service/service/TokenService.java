@@ -79,6 +79,7 @@ public class TokenService {
         claims.put("loggedIn", loggedIn);
         claims.put("authorities", roles);
         claims.put("uuid", uuid);
+
         return tokenUtil.createPaymentToken(claims);
     }
 

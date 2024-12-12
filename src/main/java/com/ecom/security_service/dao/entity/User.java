@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 @Table(name = "APP_USER")
@@ -30,5 +31,6 @@ public class User implements Serializable {
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
-
+    @OneToMany(mappedBy = "user")
+    private List<Address> userAddresses;
 }

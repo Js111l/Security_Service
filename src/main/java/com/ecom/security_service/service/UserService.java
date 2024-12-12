@@ -2,15 +2,22 @@ package com.ecom.security_service.service;
 
 import com.ecom.security_service.client.FinancialTransactionsServiceClient;
 import com.ecom.security_service.controller.LoginRequestModel;
+import com.ecom.security_service.dao.AddressRepository;
+import com.ecom.security_service.dao.mapper.AddressMapper;
+import com.ecom.security_service.model.AddressModel;
 import com.ecom.security_service.model.UserDataModel;
 import com.ecom.security_service.controller.UserModel;
 import com.ecom.security_service.dao.UserRepository;
 import com.ecom.security_service.dao.entity.User;
 import com.ecom.security_service.dao.mapper.UserMapper;
 import com.ecom.security_service.enums.UserRole;
+import com.ecom.security_service.util.RequestUtil;
 import com.ecom.security_service.util.TokenUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
+import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +27,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.WebUtils;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -40,6 +48,8 @@ public class UserService implements UserDetailsService {
     @Autowired
     @Lazy
     private RedisSessionService redisSessionService;
+    @Autowired
+    private AddressRepository addressRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -123,4 +133,28 @@ public class UserService implements UserDetailsService {
         User user = this.userRepository.findById(userId).orElseThrow();
         return UserMapper.INSTANCE.entityToDataModel(user);
     }
+
+    public List<AddressModel> getCurrentUserAddresses(HttpServletRequest request) {
+        var sessionCookie = WebUtils.getCookie(request, "sessionId");
+        var sessionId = sessionCookie == null ? null : sessionCookie.getValue();
+        final Long userId = this.getCurrentUserIdFromSession(sessionId);
+        return this.addressRepository.getUserAddresses(userId).stream().map(AddressMapper.INSTANCE::entityToModel).toList();
+    }
+
+    public Pair<AddressModel, AddressModel> getCurrentUserDefaultAddresses(HttpServletRequest request) {
+        var sessionCookie = WebUtils.getCookie(request, "sessionId");
+        var sessionId = sessionCookie == null ? null : sessionCookie.getValue();
+        final Long userId = this.getCurrentUserIdFromSession(sessionId);
+        List<AddressModel> list = this.addressRepository.getUserDefaultAddresses(userId).stream().map(AddressMapper.INSTANCE::entityToModel).toList();
+        ;
+        return new Pair<>(!list.isEmpty() ? list.get(0) : null, list.size() >= 2 ? list.get(1) : null);
+    }
+
+    private Long getCurrentUserIdFromSession(String sessionId) {//TODO do jakiegos session service mozna
+        return (Long) this.redisSessionService.getAttributeFromSession(
+                "spring:session:sessions:" + sessionId,
+                "sessionAttr:userId"
+        );
+    }
+
 }

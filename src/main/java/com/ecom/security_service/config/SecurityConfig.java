@@ -43,7 +43,8 @@ public class SecurityConfig {
                                 "/auth/one-time-token",
                                 "/auth/pay-token",
                                 "/auth/session/verify",
-                                "/auth/session/user")
+                                "/auth/session/user",
+                                "/user/**")
                         .permitAll()
                         .anyRequest().permitAll()
                 ).csrf(AbstractHttpConfigurer::disable)
