@@ -55,9 +55,6 @@ public class RedisSessionService {
 
         cookie.setDomain("localhost");  // Set the domain to localhost
         cookie.setPath("/");
-        cookie.setMaxAge(3600);
-
-        cookie.setMaxAge(LocalTime.of(0, 15).getMinute() * 60);
         response.addCookie(cookie);
         return new LoginStatusResponse(loggedIn, userSessionId);
     }
@@ -80,7 +77,6 @@ public class RedisSessionService {
             cookie.setHttpOnly(true);
             cookie.setDomain("localhost");
             cookie.setPath("/");
-            cookie.setMaxAge(3600);
             response.addCookie(cookie);
 
             // docelowo jakis model usera, czy zalogowany, czy niezalogoway gość,
@@ -95,7 +91,6 @@ public class RedisSessionService {
         cookie.setHttpOnly(true);
         cookie.setDomain("localhost");
         cookie.setPath("/");
-        cookie.setMaxAge(3600);
         response.addCookie(cookie);
         return new LoginStatusResponse(true, session.getId());
     }

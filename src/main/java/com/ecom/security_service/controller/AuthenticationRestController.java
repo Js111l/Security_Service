@@ -163,7 +163,6 @@ public class AuthenticationRestController {
         Cookie cookie = new Cookie("paymentToken", token);
         // a do cache klucz: session id,  user
         cookie.setHttpOnly(true);
-        cookie.setMaxAge(LocalTime.of(0, 15).getMinute() * 60);
         response.addCookie(cookie);
         return new ResponseEntity<>(HttpStatus.OK);
     }

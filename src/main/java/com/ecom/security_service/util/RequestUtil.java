@@ -24,11 +24,8 @@ public final class RequestUtil {
         Cookie cookie = new Cookie("sessionId", session.getId()); //springowy session id
         cookie.setHttpOnly(true);
 
-        cookie.setDomain("localhost");  // Set the domain to localhost
+        cookie.setDomain("localhost");
         cookie.setPath("/");
-        cookie.setMaxAge(3600);
-
-        cookie.setMaxAge(LocalTime.of(0, 15).getMinute() * 60);
         return cookie;
     }
 
